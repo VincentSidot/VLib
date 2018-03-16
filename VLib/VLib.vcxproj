@@ -119,7 +119,9 @@
     <ClCompile Include="VString.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="VLib.h" />
     <ClInclude Include="VString.h" />
+    <ClInclude Include="VVector.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
