@@ -6,13 +6,11 @@ using namespace VLib;
 
 int main(int argc, char** argv)
 {
-	int a[] = { 1,2,3,4 };
-	VVector<int> v1;
-	v1 = VVector<int>(a,4);
-
+	VVector<VString> v1;
+	v1 = VVector<VString>({ "lol","lal","lul" }).sort();
 	for (size_t i = 0; i < v1.size(); i++)
 	{
-		printf("%d\n", v1[i]);
+		printf("%s\n", v1[i].getChar());
 	}
 
 	getchar();

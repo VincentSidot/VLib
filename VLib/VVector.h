@@ -19,6 +19,8 @@ namespace VLib
 
 		VVector extract(size_t begin, size_t len);
 
+		VVector& sort();
+
 		T* data() const;
 
 		T& operator[](size_t index);
@@ -48,7 +50,8 @@ namespace VLib
 	VVector<T> reverse(VVector<T> othr);
 	template<class T>
 	VVector<T> extract(VVector<T> const &othr, size_t begin, size_t len);
-
+	template<class T>
+	VVector<T> sort(VVector<T> othr);
 
 
 
@@ -63,14 +66,20 @@ namespace VLib
 	{
 		m_len = len;
 		m_data = new T[len];
-		memcpy(m_data, data, len);
+		for (size_t i = 0; i < len; i++)
+		{
+			m_data[i] = data[i];
+		}
 	}
 	template<class T>
 	inline VVector<T>::VVector(VVector const & othr)
 	{
 		m_len = othr.size();
 		m_data = new T[m_len];
-		memcpy(m_data, othr.m_data(), len);
+		for (size_t i = 0; i < m_len; i++)
+		{
+			m_data[i] = othr.m_data()[i];
+		}
 	}
 	template<class T>
 	inline VVector<T>::VVector(size_t count)
@@ -120,8 +129,28 @@ namespace VLib
 		}
 		T* tmp;
 		tmp = new T[len];
-		memcpy(tmp, m_data + begin, len);
+		for (size_t i = 0; i < len; i++)
+		{
+			tmp[i] = m_data[begin + i];
+		}
 		return VVector<T>(tmp, len);
+	}
+	template<class T>
+	inline VVector<T> & VVector<T>::sort()
+	{
+		for (size_t i = 0; i < m_len-1; i++)
+		{
+			for (size_t j = 0; j < m_len-1; j++)
+			{
+				if (m_data[j] > m_data[j + 1])
+					{
+						T tmp = m_data[j];
+						m_data[j] = m_data[j+1];
+						m_data[j+1] = tmp;
+					}
+			}
+		}
+		return *this;
 	}
 	template<class T>
 	inline T * VVector<T>::data() const
@@ -161,8 +190,14 @@ namespace VLib
 			T* tmp;
 			tmp = m_data;
 			m_data = new T[m_len + othr.size()];
-			memcpy(m_data, tmp, m_len);
-			memcpy(m_data + m_len, othr.data(), othr.size());
+			for (size_t i = 0; i < m_len; i++)
+			{
+				m_data[i] = tmp[i];
+			}
+			for (size_t i = 0; i < othr.size(); i++)
+			{
+				m_data[i + m_len] = othr.data()[i];
+			}
 			m_len += othr.size();
 			delete[] tmp;
 		}
@@ -181,8 +216,14 @@ namespace VLib
 			T* tmp;
 			tmp = m_data;
 			m_data = new T[m_len + len];
-			memcpy(m_data, tmp, m_len);
-			memcpy(m_data + m_len, data, len);
+			for (size_t i = 0; i < m_len; i++)
+			{
+				m_data[i] = tmp[i];
+			}
+			for (size_t i = 0; i < len; i++)
+			{
+				m_data[i + m_len] = data[i];
+			}
 			m_len += len;
 			delete[] tmp;
 		}
@@ -197,7 +238,10 @@ namespace VLib
 	{
 		T* tmp;
 		tmp = new T[m_len];
-		memcpy(tmp, m_data, m_len);
+		for (size_t i = 0; i < m_len; i++)
+		{
+			tmp[i] = m_data[i];
+		}
 		for (size_t i = 0; i < m_len; i++)
 		{
 			m_data[i] = tmp[m_len - 1 - i];
@@ -210,7 +254,10 @@ namespace VLib
 		this->~VVector();
 		m_len = othr.size();
 		m_data = new T[m_len];
-		memcpy(m_data, othr.data(), m_len);
+		for (size_t i = 0; i < m_len; i++)
+		{
+			m_data[i] = othr.data()[i];
+		}
 		return *this;
 	}
 	template<class T>
@@ -242,7 +289,10 @@ namespace VLib
 		T* tmp;
 		tmp = m_data;
 		m_data = new T[m_len + 1];
-		memcpy(m_data, tmp, m_len);
+		for (size_t i = 0; i < m_len; i++)
+		{
+			m_data[i] = tmp[i];
+		}
 		m_data[m_len] = element;
 		m_len += 1;
 		delete[] tmp;
@@ -257,5 +307,10 @@ namespace VLib
 	VVector<T> extract(VVector<T> const & othr, size_t begin, size_t len)
 	{
 		return othr.extract(begin,len);
+	}
+	template<class T>
+	VVector<T> sort(VVector<T> othr)
+	{
+		return othr.sort();
 	}
 }
